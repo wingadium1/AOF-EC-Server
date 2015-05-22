@@ -32,11 +32,11 @@
             this.lbClientPlayer = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.lbClientPresenter = new System.Windows.Forms.ListBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lbQuestion = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonCnt = new System.Windows.Forms.Button();
             this.labelAns = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelTimer = new System.Windows.Forms.Label();
@@ -52,6 +52,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.lbFile = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -88,17 +89,6 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "List Client Presenter";
             // 
-            // lbClientPresenter
-            // 
-            this.lbClientPresenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbClientPresenter.FormattingEnabled = true;
-            this.lbClientPresenter.ItemHeight = 18;
-            this.lbClientPresenter.Location = new System.Drawing.Point(3, 30);
-            this.lbClientPresenter.Name = "lbClientPresenter";
-            this.lbClientPresenter.Size = new System.Drawing.Size(157, 202);
-            this.lbClientPresenter.TabIndex = 3;
-            this.lbClientPresenter.SelectedIndexChanged += new System.EventHandler(this.lbClientPresenter_SelectedIndexChanged);
-            // 
             // labelInfo
             // 
             this.labelInfo.AutoSize = true;
@@ -132,6 +122,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonCnt);
             this.groupBox1.Controls.Add(this.labelAns);
             this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.labelTimer);
@@ -143,6 +134,16 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Question is being showed";
+            // 
+            // buttonCnt
+            // 
+            this.buttonCnt.Location = new System.Drawing.Point(523, 153);
+            this.buttonCnt.Name = "buttonCnt";
+            this.buttonCnt.Size = new System.Drawing.Size(87, 23);
+            this.buttonCnt.TabIndex = 5;
+            this.buttonCnt.Text = "Continue";
+            this.buttonCnt.UseVisualStyleBackColor = true;
+            this.buttonCnt.Click += new System.EventHandler(this.buttonCnt_Click);
             // 
             // labelAns
             // 
@@ -174,7 +175,7 @@
             // 
             // btnShow
             // 
-            this.btnShow.Location = new System.Drawing.Point(523, 129);
+            this.btnShow.Location = new System.Drawing.Point(523, 114);
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(87, 23);
             this.btnShow.TabIndex = 1;
@@ -286,11 +287,23 @@
             this.textBox1.TabIndex = 13;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
+            // lbFile
+            // 
+            this.lbFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbFile.FormattingEnabled = true;
+            this.lbFile.ItemHeight = 18;
+            this.lbFile.Location = new System.Drawing.Point(9, 30);
+            this.lbFile.Name = "lbFile";
+            this.lbFile.Size = new System.Drawing.Size(151, 202);
+            this.lbFile.TabIndex = 14;
+            this.lbFile.SelectedIndexChanged += new System.EventHandler(this.lbFile_SelectedIndexChanged);
+            // 
             // Presenting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 606);
+            this.Controls.Add(this.lbFile);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.label1);
@@ -301,7 +314,6 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.lbClientPresenter);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lbClientPlayer);
             this.Name = "Presenting";
@@ -322,7 +334,6 @@
         private System.Windows.Forms.ListBox lbClientPlayer;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ListBox lbClientPresenter;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox lbQuestion;
@@ -342,5 +353,7 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button buttonCnt;
+        private System.Windows.Forms.ListBox lbFile;
     }
 }

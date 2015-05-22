@@ -42,6 +42,9 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnDel = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textQuestionTime = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -192,11 +195,43 @@
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(292, 511);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(151, 25);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Question Time";
+            // 
+            // textQuestionTime
+            // 
+            this.textQuestionTime.Location = new System.Drawing.Point(449, 514);
+            this.textQuestionTime.Name = "textQuestionTime";
+            this.textQuestionTime.Size = new System.Drawing.Size(100, 20);
+            this.textQuestionTime.TabIndex = 18;
+            this.textQuestionTime.Leave += new System.EventHandler(this.textQuestionTime_Leave);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(877, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(119, 28);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "Browse";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Question_Management
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 546);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.textQuestionTime);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnDel);
             this.Controls.Add(this.btnBrowse);
@@ -239,5 +274,8 @@
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnDel;
         private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textQuestionTime;
+        private System.Windows.Forms.Button button1;
     }
 }

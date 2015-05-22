@@ -16,6 +16,8 @@ namespace Utility
         public string message { get; set; }
         public string IP { get; set; }
         public string name { get; set; }
+
+        
         public Message(Type _type,Question _x,String _message,String _IP,String _name)
         {
             switch (_type){
@@ -23,7 +25,7 @@ namespace Utility
                                     type = _type;
                                     IP = _IP;
                                     name = _name;
-                                    if (null != _x.questionImage)
+                                    if (null != _x.questionImage && _x.questionImage.CompareTo("")!=0)
                                     {
                                         type = Type.Quest;
                                         System.Drawing.Bitmap Image = new System.Drawing.Bitmap(System.IO.Directory.GetCurrentDirectory() + @"\Image\"+_x.questionImage);
@@ -44,8 +46,6 @@ namespace Utility
                                     name = _name;
                                     break;
 
-
-
             }
                 
             
@@ -59,6 +59,7 @@ namespace Utility
             Ans,
             JoinSlot,
             LeaveSlot,
+            Cnt
         }
     }
 }

@@ -113,7 +113,7 @@ namespace GUI
             Utility.Question q = questionList[id];
             tbQuestionText.Text = q.question;
             tbAns.Text = q.ans;
-            if (null != q.questionImage)
+            if (null != q.questionImage && q.questionImage.CompareTo("")!=0)
             {
                 ShowImage(imageFolder + @"\" + q.questionImage, 320, 240,pictureBox1);
             }
@@ -121,6 +121,10 @@ namespace GUI
             {
                 pictureBox1.Image = null;
             }
+
+            textQuestionTime.Text = Convert.ToString(q.questionTime);
+
+
         }
 
         private void ShowImage(String fileToDisplay, int xSize, int ySize,PictureBox pictureBox)
@@ -130,13 +134,15 @@ namespace GUI
             if (null!=Image)
             {
                 Image.Dispose();
+                
             }
-
-            // Stretches the image to fit the pictureBox.
+            
             pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             Image = new Bitmap(fileToDisplay);
             pictureBox.ClientSize = new Size(xSize, ySize);
             pictureBox.Image = (Image)Image;
+            // Stretches the image to fit the pictureBox.
+            
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -197,6 +203,7 @@ namespace GUI
             Utility.Question q = questionList[id];
             q.questionImage = null;
             pictureBox1.Image = null;
+            textQuestionTime.Text = "";
         }
 
         private void tbQuestionText_Leave(object sender, EventArgs e)
@@ -235,7 +242,7 @@ namespace GUI
             string[] lines = new string[_listquest.Count];
             foreach (var quest in _listquest)
             {
-                lines[_listquest.IndexOf(quest)] = quest.question + "|" + quest.ans + "|" + quest.questionImage;
+                lines[_listquest.IndexOf(quest)] = quest.question + "|" + quest.ans + "|" + quest.questionImage + "|" + quest.questionTime;
             }
 
             System.IO.File.WriteAllLines(_questionFile, lines);
@@ -268,6 +275,53 @@ namespace GUI
             listBoxQuestion.Items[id] = string.Format("[{0}]", questionList[id].question);
             listBoxQuestion.Items[id + 1] = string.Format("[{0}]", questionList[id + 1].question);
             listBoxQuestion.SelectedIndex = id + 1;
+        }
+
+        private void textQuestionTime_Leave(object sender, EventArgs e)
+        {
+            int id = listBoxQuestion.SelectedIndex;
+            if (id < 0)
+            {
+                return;
+            }
+            Utility.Question q = questionList[id];
+            try
+            {
+                q.questionTime = Int32.Parse(textQuestionTime.Text);
+            }
+            catch (Exception ex)            
+            {
+                q.questionTime = 0;
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            int size = -1;
+            OpenFileDialog OFD = new OpenFileDialog();
+            OFD.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
+            OFD.RestoreDirectory = true;
+            OFD.Title = "Browse Question Files";
+            OFD.Filter = "";
+
+            
+            string sep = string.Empty;
+
+
+            OFD.Filter = String.Format("{0}{1}{2} ({3})|{3}", OFD.Filter, sep, "All Files", "*.*");
+
+
+            DialogResult result = OFD.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string fullname = OFD.FileName;
+                string filename = System.IO.Path.GetFileName(fullname);
+                questionFile = fullname;
+                listBoxQuestion.Items.Clear();
+                Loading();
+            }
+
+            Console.WriteLine(result); // <-- For debugging use.
         }
 
 

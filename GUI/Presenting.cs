@@ -22,6 +22,8 @@ namespace GUI
             Loading();
         }
 
+        
+
 
         private void lbClientPresenter_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -60,7 +62,7 @@ namespace GUI
         List<Utility.Question> questionList = new List<Utility.Question>();
         // question file
         private string imageFolder = System.IO.Directory.GetCurrentDirectory() + @"\Image";
-        private string questionFile = System.IO.Directory.GetCurrentDirectory() + @"\question.txt";
+        private string questionFileFolder = System.IO.Directory.GetCurrentDirectory();
         //question timer
         int timeLeft;
         #endregion
@@ -125,21 +127,21 @@ namespace GUI
                 while (true)//Trong khi vẫn còn kết nối
                 {
                     #region Nhận dữ liệu từ máy khách gửi đến
-
+                    
                     try
                     {
+                        int slot = 0;
                         byte[] dlNhan = new byte[1048576];
                         socket.Receive(dlNhan);
                        // tmp = Encoding.Unicode.GetString(dlNhan);
                         Utility.Message reciveMessage = ByteArrayToMessage(dlNhan);
-                        int slot = 0;
+                        
                         switch(reciveMessage.type)
                         {
                             case (Utility.Message.Type.JoinSlot):
                                 textBox1.Text += "Player " + reciveMessage.name + "@" + reciveMessage.IP + 
                                                         " have joined at slot" + reciveMessage.message + "!!!!\r\n";
                                 slot = Int32.Parse(reciveMessage.message);
-                                //ListClientPlayer[slot-1] = socket;
                                 namePlayers.Add(slot,reciveMessage.name);
                                 namePlayer[slot-1] = reciveMessage.name;
                                 lbClientPlayer.Items[slot - 1] = string.Format("[{0}]{1}", slot,namePlayer[slot-1]);
@@ -156,7 +158,14 @@ namespace GUI
                                     }
                                 }
                                 
+                                
+                                timerCountDown.Stop();
+
                                 SendData(reciveMessage);
+                                using (System.Media.SoundPlayer player = new System.Media.SoundPlayer("C:\\OldPhone.wav"))
+                                {
+                                    player.PlaySync();
+                                }
                                 break;
                         }
                         
@@ -164,20 +173,12 @@ namespace GUI
                     catch (Exception er)
                     {
                         textBox1.Text += @"Lost connect to client\r\n";
-                        textBox1.Text += er.Message + er.Source;
+                        
                         break;
                     }
 
                     #endregion
 
-                    #region Xử lí dữ liệu nhận được: Nếu thỏa mãn thì gửi lại cho máy khách và có thể lưu vào CSDL
-
-                    //Hiển thị dữ liệu nhận đc
-                    //richTextBox1.Text = richTextBox1.Text + tmp;
-                    //richTextBox1.Text = richTextBox1.Text + "\r\n";
-
-                    
-                    #endregion
                 }
             }));
             thCommunications.IsBackground = true;//Khi thoát sẽ tự đóng thread luôn
@@ -338,16 +339,16 @@ namespace GUI
         }
         private void loadQuestion()
         {
-            questionList = getQuestionFromFile(questionFile);
-            foreach (Utility.Question q in questionList)
-            {
+            lbFile.Items.Clear();
+            DirectoryInfo d = new DirectoryInfo(questionFileFolder);
 
-                lbQuestion.Items.Add(string.Format("[{0}]", q.question));
+            foreach (var file in d.GetFiles("*.txt"))
+            {
+                lbFile.Items.Add(file);
             }
-            lbQuestion.SelectedIndex = 0;
-            labelQuest.Text = "";
-            labelAns.Text = "";
-            labelTimer.Text = "00:00";
+
+            lbFile.SelectedIndex = 0;
+
 
         }
         public static List<Utility.Question> getQuestionFromFile(String _questionFile)
@@ -379,7 +380,7 @@ namespace GUI
             Utility.Question q = questionList[id];
             lbQuestionNext.Text = q.question;
             labelAnsNext.Text = q.ans;
-            if (null != q.questionImage)
+            if (null != q.questionImage && q.questionImage.CompareTo("") != 0)
             {
                 ShowImage(imageFolder + @"\" + q.questionImage, 240, 160, pictureBox2);
             }
@@ -427,14 +428,13 @@ namespace GUI
             sendQuestion(q);
             labelQuest.Text = q.question;
             labelAns.Text = q.ans;
-            btnShow.Enabled = false;
-            if (null != q.questionImage)
+            if (null != q.questionImage && q.questionImage.CompareTo("") != 0)
             {
                 ShowImage(imageFolder + @"\" + q.questionImage, 200, 150, pictureBox1);
             }
             else
             {
-                pictureBox2.Image = null;
+                pictureBox1.Image = null;
             }
 
 
@@ -448,16 +448,16 @@ namespace GUI
                 pictureBox2.Image = null;
                 labelAnsNext.Text = "";
             }
-            
-            StartTheQuestion();
+
+            StartTheQuestion(q.questionTime);
         }
         
 
 
-        private void StartTheQuestion()
+        private void StartTheQuestion(int _time)
         {
-            timeLeft = 100;
-            labelTimer.Text = "10''00";
+            timeLeft = _time*10;
+            labelTimer.Text = String.Format("{0}''00",_time);
             timerCountDown.Interval = 100;
             timerCountDown.Start();
 
@@ -486,12 +486,40 @@ namespace GUI
 
         private void btnShow_Click(object sender, EventArgs e)
         {
-            Utility.Message showAns = new Utility.Message(Utility.Message.Type.ShowAns,null , "", IP, "Server");
+            Utility.Message showAns = new Utility.Message(Utility.Message.Type.ShowAns, null, "", IP, "Server");
             foreach (Socket s in listClient)
             {
                 s.Send(MessageToByteArray(showAns));
             }
         }
 
+        private void buttonCnt_Click(object sender, EventArgs e)
+        {
+            Utility.Message sendContinue = new Utility.Message(Utility.Message.Type.Cnt, null, "cnt", IP, "Server");
+            foreach (Socket s in listClient)
+            {
+                s.Send(MessageToByteArray(sendContinue));
+            }
+        }
+
+        private void lbFile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lbQuestion.Items.Clear();
+            int id = lbFile.SelectedIndex;
+            if (id < 0)
+            {
+                return;
+            }
+            
+            questionList = getQuestionFromFile(questionFileFolder+"\\"+lbFile.SelectedItem.ToString());
+            foreach (Utility.Question q in questionList)
+            {
+                lbQuestion.Items.Add(string.Format("[{0}]", q.question));
+            }
+            lbQuestion.SelectedIndex = 0;
+            labelQuest.Text = "";
+            labelAns.Text = "";
+            labelTimer.Text = "00:00";
+        }
     }
 }

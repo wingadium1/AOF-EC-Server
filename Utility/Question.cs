@@ -12,18 +12,22 @@ namespace Utility
         public String question { get; set; }
         public string questionImage { get; set; }
 
+        public int questionTime { get; set; }
+
         public Question()
         {
             question = null;
             ans = null;
             questionImage = null;
+            questionTime = 0;
         }
 
-        public Question(String _ans,String _question, String _questionImage)
+        public Question(String _ans,String _question, String _questionImage, int _questionTime)
         {
             ans = _ans;
             question = _question;
             questionImage = _questionImage;
+            questionTime = _questionTime;
         }
         public Question(string line)
         {
@@ -37,6 +41,13 @@ namespace Utility
             catch (IndexOutOfRangeException ioore)
             {
                 questionImage = null;
+            }
+            try
+            {
+                questionTime = Int32.Parse(words[3]);
+            }
+            catch (Exception ex){
+                questionTime = 0;
             }
         }
         
