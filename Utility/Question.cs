@@ -8,18 +8,18 @@ namespace Utility
     [Serializable]
     public class Question
     {
-        public String ans { get; set; }
-        public String question { get; set; }
+        public string ans { get; set; }
+        public string question { get; set; }
         public string questionImage { get; set; }
-
         public int questionTime { get; set; }
-
+        public string questionVideo { get; set; }
         public Question()
         {
             question = null;
             ans = null;
             questionImage = null;
             questionTime = 0;
+            questionVideo = null;
         }
 
         public Question(String _ans,String _question, String _questionImage, int _questionTime)
@@ -48,6 +48,14 @@ namespace Utility
             }
             catch (Exception ex){
                 questionTime = 0;
+            }
+            try
+            {
+                questionVideo = words[4];
+            }
+            catch (IndexOutOfRangeException ioore)
+            {
+                questionVideo = null;
             }
         }
         

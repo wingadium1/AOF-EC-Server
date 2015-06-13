@@ -45,6 +45,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textQuestionTime = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.textBoxVideo = new System.Windows.Forms.TextBox();
+            this.buttonBroVideo = new System.Windows.Forms.Button();
+            this.buttonPlay = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -224,11 +227,44 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // textBoxVideo
+            // 
+            this.textBoxVideo.Location = new System.Drawing.Point(555, 514);
+            this.textBoxVideo.Name = "textBoxVideo";
+            this.textBoxVideo.Size = new System.Drawing.Size(267, 20);
+            this.textBoxVideo.TabIndex = 20;
+            this.textBoxVideo.Leave += new System.EventHandler(this.textBoxVideo_Leave);
+            // 
+            // buttonBroVideo
+            // 
+            this.buttonBroVideo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonBroVideo.Location = new System.Drawing.Point(838, 506);
+            this.buttonBroVideo.Name = "buttonBroVideo";
+            this.buttonBroVideo.Size = new System.Drawing.Size(74, 28);
+            this.buttonBroVideo.TabIndex = 21;
+            this.buttonBroVideo.Text = "Browse";
+            this.buttonBroVideo.UseVisualStyleBackColor = true;
+            this.buttonBroVideo.Click += new System.EventHandler(this.buttonBroVideo_Click);
+            // 
+            // buttonPlay
+            // 
+            this.buttonPlay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPlay.Location = new System.Drawing.Point(922, 506);
+            this.buttonPlay.Name = "buttonPlay";
+            this.buttonPlay.Size = new System.Drawing.Size(74, 28);
+            this.buttonPlay.TabIndex = 22;
+            this.buttonPlay.Text = "Play";
+            this.buttonPlay.UseVisualStyleBackColor = true;
+            this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
+            // 
             // Question_Management
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 546);
+            this.Controls.Add(this.buttonPlay);
+            this.Controls.Add(this.buttonBroVideo);
+            this.Controls.Add(this.textBoxVideo);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textQuestionTime);
             this.Controls.Add(this.label4);
@@ -277,5 +313,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textQuestionTime;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBoxVideo;
+        private System.Windows.Forms.Button buttonBroVideo;
+        private System.Windows.Forms.Button buttonPlay;
     }
 }

@@ -15,15 +15,15 @@ namespace GUI
 {
     public partial class Presenting : Form
     {
+        private string videoFolder = System.IO.Directory.GetCurrentDirectory() + @"\Video";
         public Presenting()
         {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
+            comboBox1.Items.AddRange(new object[] { "Stage 1", "Stage 2", "Stage 3" });
+            comboBox1.SelectedIndex = comboBox1.FindStringExact("Stage 1");
             Loading();
         }
-
-        
-
 
         private void lbClientPresenter_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -55,7 +55,7 @@ namespace GUI
         Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         //List of 2 types of client
         //Socket[] ListClientPlayer = new Socket[4];
-        String[] namePlayer = new String[4];
+        String[] namePlayer = new String[5];
         System.Collections.Generic.Dictionary<int, string> namePlayers = new System.Collections.Generic.Dictionary<int, string>();
         List<Socket> listClient = new List<Socket>();
         // question list
@@ -87,18 +87,9 @@ namespace GUI
             //while server is working, each time there is a signal from client, add client to list
             while (true)
             {
-                //socket = listen.AcceptSocket();
-
-                //add client
                 socket = s.Accept();
-
-                //Lưu máy khách được thêm vào danh sách. Để dễ quản lí
                 listClient.Add(socket);
-                //Thông báo kết nối với máy khách
                 textBox1.Text = textBox1.Text + "a client has connected \r\n";
-
-
-                //Mỗi máy khách sẽ được xử lí trong 1 luồng (thread)
                 ThreadPool.QueueUserWorkItem(Communications, socket);
 
             }
@@ -115,16 +106,13 @@ namespace GUI
 
             //Thông báo kết nối thành công đến máy khách kết nối
             {
-                Utility.Message message = new Utility.Message(Utility.Message.Type.Hello, null, "Hello client, you connected with server " + IP + "\r\n",IP,"Server");
+                Utility.Message message = new Utility.Message(Utility.Message.Type.Hello, null, "Hello client, you connected with server " + IP + "\r\n", IP, "Server", checkBox1.Checked);
                 byte[] buffer = MessageToByteArray(message);
                 socket.Send(buffer);
             }
-            
-
-            //Mỗi máy khách được xử lý riêng trong 1 luồng (thread)
             thCommunications = new Thread((ThreadStart)(() =>
             {
-                while (true)//Trong khi vẫn còn kết nối
+                while (true)
                 {
                     #region Nhận dữ liệu từ máy khách gửi đến
                     
@@ -133,7 +121,6 @@ namespace GUI
                         int slot = 0;
                         byte[] dlNhan = new byte[1048576];
                         socket.Receive(dlNhan);
-                       // tmp = Encoding.Unicode.GetString(dlNhan);
                         Utility.Message reciveMessage = ByteArrayToMessage(dlNhan);
                         
                         switch(reciveMessage.type)
@@ -147,8 +134,13 @@ namespace GUI
                                 lbClientPlayer.Items[slot - 1] = string.Format("[{0}]{1}", slot,namePlayer[slot-1]);
                                 break;
                             case (Utility.Message.Type.Ans):
+
+                                SendData(reciveMessage);
                                 textBox1.Text += "Player " + reciveMessage.name + "@" + reciveMessage.IP +
                                                         " answered " + reciveMessage.message + "at" + timeLeft +  "!!!!\r\n";
+                                int time = timeLeft;
+                                timeLeft = 0;
+                                labelTimer.Text = String.Format("{0}''{1}", time / 10, (time % 10));
                                 foreach (KeyValuePair<int, string> pair in namePlayers)
                                 {
                                     if (reciveMessage.name.Equals(pair.Value))
@@ -159,13 +151,11 @@ namespace GUI
                                 }
                                 
                                 
-                                timerCountDown.Stop();
-
-                                SendData(reciveMessage);
-                                using (System.Media.SoundPlayer player = new System.Media.SoundPlayer("C:\\OldPhone.wav"))
+                                using (System.Media.SoundPlayer player = new System.Media.SoundPlayer(System.IO.Directory.GetCurrentDirectory() + @"\OldPhone.wav"))
                                 {
                                     player.PlaySync();
                                 }
+                                                             
                                 break;
                         }
                         
@@ -173,23 +163,20 @@ namespace GUI
                     catch (Exception er)
                     {
                         textBox1.Text += @"Lost connect to client\r\n";
+                        listClient.Remove(socket);
+                        Console.WriteLine("ereeeeeeeeeeeeeeeeeee" + listClient.Count);
+                        thCommunications.Abort();
                         
                         break;
                     }
-
                     #endregion
-
                 }
             }));
             thCommunications.IsBackground = true;//Khi thoát sẽ tự đóng thread luôn
             thCommunications.Start();
         }
 
-        /// <summary>
-        /// Gửi dữ liệu đến máy khách
-        /// </summary>
-        /// <param name="data">Nội dung cần gửi</param>
-        /// <param name="client">Socket của máy khách. Được tạo ra trong KetNoiTaoServer()</param>
+        
         private void SendData(string data, Socket client)
         {
             try
@@ -238,6 +225,7 @@ namespace GUI
                 catch (Exception er)
                 {
                     textBox1.Text = textBox1.Text + er.Message + "\r\n";
+                    listClient.Remove(s);
                     s.Close();
                 }
             }
@@ -321,6 +309,7 @@ namespace GUI
                 lbClientPlayer.Items.Add(string.Format("[{0}]", "Slot2"));
                 lbClientPlayer.Items.Add(string.Format("[{0}]", "Slot3"));
                 lbClientPlayer.Items.Add(string.Format("[{0}]", "Slot4"));
+                lbClientPlayer.Items.Add(string.Format("[{0}]", "Slot5"));
 
 
             }
@@ -388,6 +377,14 @@ namespace GUI
             {
                 pictureBox2.Image = null;
             }
+            if (null != q.questionVideo && q.questionVideo.CompareTo("") != 0)
+            {
+                button1.Enabled = true;
+            }
+            else
+            {
+                button1.Enabled = false;
+            }
 
         }
 
@@ -409,16 +406,24 @@ namespace GUI
 
         private void sendQuestion(Utility.Question q)
         {
-            Utility.Message sendQuest = new Utility.Message(Utility.Message.Type.Quest, q, "question", IP, "Server");
+            Utility.Message sendQuest = new Utility.Message(Utility.Message.Type.Quest, q, "question", IP, "Server", checkBox1.Checked);
             foreach (Socket s in listClient)
             {
+                try{
                 s.Send(MessageToByteArray(sendQuest));
+                }
+                catch (Exception er)
+                {
+                    textBox1.Text = textBox1.Text + er.Message + "\r\n";
+                    s.Close();
+                }
             }
 
         }
 
         private void btnSend_Click(object sender, EventArgs e)
         {
+            timerCountDown.Enabled = true;
             int id = lbQuestion.SelectedIndex;
             if (id < 0)
             {
@@ -448,8 +453,16 @@ namespace GUI
                 pictureBox2.Image = null;
                 labelAnsNext.Text = "";
             }
-
-            StartTheQuestion(q.questionTime);
+            if (checkBox1.Checked)
+            {
+                StartTheQuestion(q.questionTime);
+            }
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0: checkBox1.Checked = false;
+                    break;
+            }
+            
         }
         
 
@@ -468,37 +481,46 @@ namespace GUI
         {
             if (timeLeft > 0)
             {
-                // Display the new time left 
-                // by updating the Time Left label.
                 timeLeft -= 1;
                 labelTimer.Text = String.Format("{0}''{1}", timeLeft/10 , (timeLeft % 10));
             }
             else
             {
-                // If the user ran out of time, stop the timer, show 
-                // a MessageBox, and fill in the answers.
-                timerCountDown.Stop();
-                labelTimer.Text = "Time's up!";
-                // MessageBox.Show("Time's up");
                 btnShow.Enabled = true;
             }
         }
 
         private void btnShow_Click(object sender, EventArgs e)
         {
-            Utility.Message showAns = new Utility.Message(Utility.Message.Type.ShowAns, null, "", IP, "Server");
+            Utility.Message showAns = new Utility.Message(Utility.Message.Type.ShowAns, null, "", IP, "Server", checkBox1.Checked);
             foreach (Socket s in listClient)
             {
-                s.Send(MessageToByteArray(showAns));
+                try
+                {
+                    s.Send(MessageToByteArray(showAns));
+                }
+                catch (Exception er)
+                {
+                    textBox1.Text = textBox1.Text + er.Message + "\r\n";
+                    s.Close();
+                }
             }
         }
 
         private void buttonCnt_Click(object sender, EventArgs e)
         {
-            Utility.Message sendContinue = new Utility.Message(Utility.Message.Type.Cnt, null, "cnt", IP, "Server");
+            Utility.Message sendContinue = new Utility.Message(Utility.Message.Type.Cnt, null, "cnt", IP, "Server", checkBox1.Checked);
             foreach (Socket s in listClient)
             {
-                s.Send(MessageToByteArray(sendContinue));
+                try
+                {
+                    s.Send(MessageToByteArray(sendContinue));
+                }
+                catch (Exception er)
+                {
+                    textBox1.Text = textBox1.Text + er.Message + "\r\n";
+                    s.Close();
+                }
             }
         }
 
@@ -510,7 +532,6 @@ namespace GUI
             {
                 return;
             }
-            
             questionList = getQuestionFromFile(questionFileFolder+"\\"+lbFile.SelectedItem.ToString());
             foreach (Utility.Question q in questionList)
             {
@@ -520,6 +541,70 @@ namespace GUI
             labelQuest.Text = "";
             labelAns.Text = "";
             labelTimer.Text = "00:00";
+            combox1_setIndex();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            combox1_setIndex();
+            
+        }
+
+        private void combox1_setIndex()
+        {
+            int id = comboBox1.SelectedIndex;
+            if (id < 0)
+            {
+                return;
+            }
+
+            switch (id)
+            {
+                case 0: checkBox1.Checked = true;
+                    break;
+                case 1: checkBox1.Checked = true;
+                    break;
+                case 2: checkBox1.Checked = false;
+                    break;
+
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            btnCount.Enabled = (checkBox1.Checked) ? false : true;
+        }
+
+        private void labelTimer_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int id = lbQuestion.SelectedIndex;
+            if (id < 0)
+            {
+                return;
+            }
+            Utility.Question q = questionList[id];
+            var playForm = new Utility.Form1(videoFolder + @"\" + q.questionVideo);
+            playForm.Show();
+
+
+            Utility.Message sendPlay = new Utility.Message(Utility.Message.Type.PlayVideo, null, q.questionVideo, IP, "Server", checkBox1.Checked);
+            foreach (Socket s in listClient)
+            {
+                try
+                {
+                    s.Send(MessageToByteArray(sendPlay));
+                }
+                catch (Exception er)
+                {
+                    textBox1.Text = textBox1.Text + er.Message + "\r\n";
+                    s.Close();
+                }
+            }
         }
     }
 }

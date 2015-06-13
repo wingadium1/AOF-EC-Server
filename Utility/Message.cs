@@ -17,8 +17,10 @@ namespace Utility
         public string IP { get; set; }
         public string name { get; set; }
 
+        public bool recount { get; set; }
+
         
-        public Message(Type _type,Question _x,String _message,String _IP,String _name)
+        public Message(Type _type,Question _x,String _message,String _IP,String _name, bool _recount)
         {
             switch (_type){
                 case Type.Quest:    x = _x;
@@ -35,6 +37,7 @@ namespace Utility
                                     }
                                     else
                                     {
+                                        Console.WriteLine("null");
                                         image = null;
                                         imagename = null;
                                     }
@@ -47,6 +50,8 @@ namespace Utility
                                     break;
 
             }
+
+            recount = _recount;
                 
             
         }
@@ -59,7 +64,10 @@ namespace Utility
             Ans,
             JoinSlot,
             LeaveSlot,
-            Cnt
+            Cnt,
+            Recount,
+            PlayVideo,
+            ChangeStage
         }
     }
 }

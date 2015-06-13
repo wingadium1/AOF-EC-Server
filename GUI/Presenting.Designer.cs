@@ -51,8 +51,12 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnCount = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lbFile = new System.Windows.Forms.ListBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -85,9 +89,9 @@
             this.label2.Font = new System.Drawing.Font("DejaVu Sans", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(6, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(154, 18);
+            this.label2.Size = new System.Drawing.Size(61, 18);
             this.label2.TabIndex = 2;
-            this.label2.Text = "List Client Presenter";
+            this.label2.Text = "List File";
             // 
             // labelInfo
             // 
@@ -128,16 +132,16 @@
             this.groupBox1.Controls.Add(this.labelTimer);
             this.groupBox1.Controls.Add(this.btnShow);
             this.groupBox1.Controls.Add(this.labelQuest);
-            this.groupBox1.Location = new System.Drawing.Point(380, 12);
+            this.groupBox1.Location = new System.Drawing.Point(380, 36);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(616, 286);
+            this.groupBox1.Size = new System.Drawing.Size(892, 268);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Question is being showed";
             // 
             // buttonCnt
             // 
-            this.buttonCnt.Location = new System.Drawing.Point(523, 153);
+            this.buttonCnt.Location = new System.Drawing.Point(799, 137);
             this.buttonCnt.Name = "buttonCnt";
             this.buttonCnt.Size = new System.Drawing.Size(87, 23);
             this.buttonCnt.TabIndex = 5;
@@ -149,7 +153,7 @@
             // 
             this.labelAns.AutoSize = true;
             this.labelAns.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAns.Location = new System.Drawing.Point(6, 246);
+            this.labelAns.Location = new System.Drawing.Point(6, 240);
             this.labelAns.Name = "labelAns";
             this.labelAns.Size = new System.Drawing.Size(70, 25);
             this.labelAns.TabIndex = 4;
@@ -166,16 +170,18 @@
             // labelTimer
             // 
             this.labelTimer.AutoSize = true;
+            this.labelTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTimer.ForeColor = System.Drawing.Color.Red;
-            this.labelTimer.Location = new System.Drawing.Point(520, 16);
+            this.labelTimer.Location = new System.Drawing.Point(821, 16);
             this.labelTimer.Name = "labelTimer";
-            this.labelTimer.Size = new System.Drawing.Size(35, 13);
+            this.labelTimer.Size = new System.Drawing.Size(51, 20);
             this.labelTimer.TabIndex = 2;
             this.labelTimer.Text = "label5";
+            this.labelTimer.Click += new System.EventHandler(this.labelTimer_Click);
             // 
             // btnShow
             // 
-            this.btnShow.Location = new System.Drawing.Point(523, 114);
+            this.btnShow.Location = new System.Drawing.Point(799, 108);
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(87, 23);
             this.btnShow.TabIndex = 1;
@@ -248,7 +254,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(529, 127);
+            this.btnSend.Location = new System.Drawing.Point(529, 142);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(87, 23);
             this.btnSend.TabIndex = 5;
@@ -266,17 +272,50 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.btnCount);
+            this.groupBox2.Controls.Add(this.checkBox1);
             this.groupBox2.Controls.Add(this.pictureBox2);
             this.groupBox2.Controls.Add(this.btnSend);
             this.groupBox2.Controls.Add(this.labelAnsNext);
             this.groupBox2.Controls.Add(this.lbQuestionNext);
-            this.groupBox2.Location = new System.Drawing.Point(380, 304);
+            this.groupBox2.Location = new System.Drawing.Point(380, 310);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(616, 264);
+            this.groupBox2.Size = new System.Drawing.Size(892, 258);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "The next question";
             this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(529, 84);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(87, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "Play";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnCount
+            // 
+            this.btnCount.Location = new System.Drawing.Point(529, 113);
+            this.btnCount.Name = "btnCount";
+            this.btnCount.Size = new System.Drawing.Size(87, 23);
+            this.btnCount.TabIndex = 7;
+            this.btnCount.Text = "Count";
+            this.btnCount.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(786, 19);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(100, 17);
+            this.checkBox1.TabIndex = 6;
+            this.checkBox1.Text = "send and count";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // textBox1
             // 
@@ -298,11 +337,21 @@
             this.lbFile.TabIndex = 14;
             this.lbFile.SelectedIndexChanged += new System.EventHandler(this.lbFile_SelectedIndexChanged);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(380, 9);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 15;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // Presenting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 606);
+            this.ClientSize = new System.Drawing.Size(1284, 606);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.lbFile);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.labelInfo);
@@ -355,5 +404,9 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonCnt;
         private System.Windows.Forms.ListBox lbFile;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button btnCount;
+        private System.Windows.Forms.Button button1;
     }
 }

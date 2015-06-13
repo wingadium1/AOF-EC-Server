@@ -16,6 +16,7 @@ namespace GUI
     {
 
         private string imageFolder = System.IO.Directory.GetCurrentDirectory() + @"\Image";
+        private string videoFolder = System.IO.Directory.GetCurrentDirectory() + @"\Video";
         private string questionFile = System.IO.Directory.GetCurrentDirectory() + @"\question.txt";
         List<Utility.Question> questionList = new List<Utility.Question>();
         public Question_Management()
@@ -63,7 +64,12 @@ namespace GUI
             if (!System.IO.File.Exists(questionFile))
             {
                // System.IO.File.Create(questionFile);
-                System.IO.File.AppendAllText(questionFile, "The very first question|The very first answer");
+                System.IO.File.AppendAllText(questionFile, "The very first question|The very first answer||0|");
+            }
+
+            if (!System.IO.Directory.Exists(videoFolder))
+            {
+                System.IO.Directory.CreateDirectory(videoFolder);
             }
         }
         private void Loading()
@@ -123,7 +129,16 @@ namespace GUI
             }
 
             textQuestionTime.Text = Convert.ToString(q.questionTime);
-
+            if (null != q.questionVideo && q.questionVideo.CompareTo("") != 0)
+            {
+                textBoxVideo.Text = q.questionVideo;
+                buttonPlay.Enabled = true;
+            }
+            else
+            {
+                textBoxVideo.Text = "";
+                buttonPlay.Enabled = false;
+            }
 
         }
 
@@ -242,7 +257,7 @@ namespace GUI
             string[] lines = new string[_listquest.Count];
             foreach (var quest in _listquest)
             {
-                lines[_listquest.IndexOf(quest)] = quest.question + "|" + quest.ans + "|" + quest.questionImage + "|" + quest.questionTime;
+                lines[_listquest.IndexOf(quest)] = quest.question + "|" + quest.ans + "|" + quest.questionImage + "|" + quest.questionTime +"|" + quest.questionVideo;
             }
 
             System.IO.File.WriteAllLines(_questionFile, lines);
@@ -303,13 +318,9 @@ namespace GUI
             OFD.RestoreDirectory = true;
             OFD.Title = "Browse Question Files";
             OFD.Filter = "";
-
-            
             string sep = string.Empty;
 
-
             OFD.Filter = String.Format("{0}{1}{2} ({3})|{3}", OFD.Filter, sep, "All Files", "*.*");
-
 
             DialogResult result = OFD.ShowDialog(); // Show the dialog.
             if (result == DialogResult.OK) // Test result.
@@ -324,6 +335,66 @@ namespace GUI
             Console.WriteLine(result); // <-- For debugging use.
         }
 
+        private void textBoxVideo_Leave(object sender, EventArgs e)
+        {
+            int id = listBoxQuestion.SelectedIndex;
+            if (id < 0)
+            {
+                return;
+            }
+            Utility.Question q = questionList[id];
+            q.questionVideo = textBoxVideo.Text;
+        }
 
+        private void buttonBroVideo_Click(object sender, EventArgs e)
+        {
+            int size = -1;
+            OpenFileDialog OFD = new OpenFileDialog();
+            OFD.InitialDirectory = videoFolder;
+            OFD.RestoreDirectory = true;
+            OFD.Title = "Browse Video Files";
+            OFD.Filter = "";
+
+            string sep = string.Empty;
+
+            OFD.Filter = "(mp3,wav,mp4,mov,wmv,mpg,avi,3gp,flv)|*.mp3;*.wav;*.mp4;*.3gp;*.avi;*.mov;*.flv;*.wmv;*.mpg|all files|*.*";  
+
+            DialogResult result = OFD.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string fullname = OFD.FileName;
+                string filename = System.IO.Path.GetFileName(fullname);
+                try
+                {
+                    System.IO.File.Copy(fullname, videoFolder + @"\" + filename, true);
+
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    int id = listBoxQuestion.SelectedIndex;
+                    Utility.Question q = questionList[id];
+                    q.questionVideo = filename;
+                    textBoxVideo.Text = filename;
+                }
+            }
+
+            Console.WriteLine(result); // <-- For debugging use.
+        }
+
+        private void buttonPlay_Click(object sender, EventArgs e)
+        {
+            int id = listBoxQuestion.SelectedIndex;
+            if (id < 0)
+            {
+                return;
+            }
+            Utility.Question q = questionList[id];
+            var playForm = new Utility.Form1(videoFolder + @"\" + q.questionVideo);
+            playForm.Show();
+        }
     }
 }
